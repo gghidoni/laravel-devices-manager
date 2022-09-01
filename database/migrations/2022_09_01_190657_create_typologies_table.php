@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('devices', function (Blueprint $table) {
+        Schema::create('typologies', function (Blueprint $table) {
             $table->id();
-            $table->string('serial');
-            $table->string('description');
-            $table->timestamp('lastUpdate');
-            $table->foreignId('typology_id');
-            $table->timestamps();
+            $table->string('name');
         });
     }
 
@@ -30,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('devices');
+        Schema::dropIfExists('typologies');
     }
 };
