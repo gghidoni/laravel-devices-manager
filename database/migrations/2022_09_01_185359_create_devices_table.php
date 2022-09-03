@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('description');
             $table->datetime('lastUpdate');
             $table->foreignId('typology_id');
+            $table->foreignId('service_id');
+            $table->foreignId('department_id');
             $table->timestamps();
         });
     }
