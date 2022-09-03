@@ -16,4 +16,21 @@ class Device extends Model
 
     }
 
+    public function department() {
+
+        return $this->belongsTo(Department::class);
+
+    }
+
+    public function service() {
+
+        return $this->belongsTo(Service::class);
+
+    }
+
+    public function utilizers()
+    {
+        return $this->belongsToMany(Utilizer::class);
+    }
+
 }
