@@ -11,7 +11,13 @@ class Service extends Model
 
     public function devices() {
 
-        return $this->hasMany(Device::class); 
+        return $this->belongsTo(Device::class); 
+
+    }
+
+    public function user() {
+
+        return $this->belongsTo(User::class);
 
     }
 

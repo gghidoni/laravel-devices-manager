@@ -9,9 +9,11 @@ class Department extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function devices() {
 
-        return $this->hasMany(Device::class); 
+        return $this->hasMany(Device::class)->orderByRaw('ISNULL(lastUpdate), lastUpdate ASC'); 
 
     } 
 

@@ -17,9 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('serial');
             $table->string('description');
-            $table->datetime('lastUpdate');
+            $table->datetime('lastUpdate')->nullable();
             $table->foreignId('typology_id');
-            $table->foreignId('service_id');
             $table->foreignId('department_id');
             $table->timestamps();
         });

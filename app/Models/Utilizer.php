@@ -9,6 +9,8 @@ class Utilizer extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function devices() {
         return $this->belongsToMany(Device::class);
     }

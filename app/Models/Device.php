@@ -9,6 +9,26 @@ class Device extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
+
+    public function scopeFilter($query, array $filters) {
+
+        // query per ricerca
+        // $query->when($filters['search'] ?? false, fn($query, $search) => 
+        // $query
+        //     ->where('title', 'like', '%' . $search . '%')); 
+
+
+        // query per filtraggio
+        // $query->when($filters['category'] ?? false, fn($query, $category) => 
+        // $query
+        //     ->where('title', 'like', '%' . $search . '%'));
+
+
+
+    }
+
 
     public function typology() {
 
@@ -22,9 +42,9 @@ class Device extends Model
 
     }
 
-    public function service() {
+    public function services() {
 
-        return $this->belongsTo(Service::class);
+        return $this->hasMany(Service::class);
 
     }
 

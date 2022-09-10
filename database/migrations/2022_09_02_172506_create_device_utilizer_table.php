@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('device_id')->references('id')->on('devices');
             $table->foreignId('utilizer_id')->references('id')->on('utilizers');
-            $table->timestamps();
+
         });
     }
 
