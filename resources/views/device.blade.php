@@ -3,6 +3,7 @@
 
 @section('content')
 
+
 <div class="single-device-page">
 
     <div class="single-device">
@@ -12,7 +13,17 @@
         </div>
         <div class="update info-box">
             <span class="title">Ultimo aggiornamento</span>
-            <span><img src="/icons/update.svg" alt="">{{$device->lastUpdate}}</span>
+            @if ($device->lastUpdate == '')
+                        <span><img src="/icons/update.svg" alt="">n.d.</span>
+                    @else
+                        @php
+                            $date = new DateTime($device->lastUpdate);
+                            $days = App\Http\Controllers\DeviceController::countDays($date->format('d-m-Y'), date('d-m-Y'));
+                        @endphp
+                        <span class="<?php if($days > 60){echo 'em-update';} ?>"><img src="/icons/update.svg" alt="">{{$date->format('d-m-Y');}}</span>
+                        
+                    @endif
+            
         </div>
         <div class="description info-box">
             <span class="title">Descrizione</span>
@@ -36,22 +47,38 @@
         </div>
 
         <div class="services">
-            <span class="title">Log Manutenzione</span>
+            <div class="title-box">
+                <span class="title">Log Manutenzione</span>
+                <a href="/devices/{{$device->serial}}/maintanence/create" class="btn-service">
+                    <img src="/icons/plus-green.svg" alt="">
+                </a>
+            </div>
+            
             <div class="log-box">
                 @foreach ($services as $service)
                     <div class="log">
                         <div class="left">
-                            <div class="service-date"><span>{{$service->date}}</span></div>
+                            <div class="service-date"><span>{{$service->created_at}}</span></div>
                             <div class="service-description"><span>{{$service->description}}</span></div>
                         </div>
                         <div class="right">
                             <div class="service-user"><span>{{$service->user->name}}</span></div>
                             <div class="service-update">
                                 <?php if($service->is_update == 1){ ?>
-                                    <img src="/icons/update.svg" alt="">
+                                    <img src="/icons/update-green.svg" alt="">
                                 <?php } ?>
                             </div>
+                            <a href="/devices/{{$device->serial}}/maintanence/{{$service->id}}/edit" class="service-edit">
+                                <img src="/icons/edit.svg" alt="EDIT">
+                            </a>
+                            <form action="/devices/{{$device->serial}}/maintanence/{{$service->id}}/destroy" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="delete-service" onclick="return confirm('Sei sicuro di voler eliminare questo log?')"><img src="/icons/delete.svg" alt="Delete"></button>
+                            </form>
+                          
                         </div> 
+                        
                     </div>
                 @endforeach
             </div>
@@ -60,13 +87,16 @@
     </div>
     <div class="btn-aside">
         <a href="/devices/{{$device->serial}}/edit" class="device-btn">
-            <img src="/icons/edit.svg" alt="">
-            <span>Edit</span>
+            <img src="/icons/edit.svg" alt="EDIT">
         </a>
-        <a href="/" class="device-btn">
-            <img src="/icons/service.svg" alt="">
-            <span>Manutenzione</span>
-        </a>
+        <form action="/devices/{{$device->serial}}/destroy" method="post">
+            @csrf
+            @method('DELETE')
+            <button class="device-btn" onclick="return confirm('Sei sicuro di voler eliminare questo dispositivo?')">
+                <img src="/icons/delete.svg" alt="EDIT">
+            </button>
+        </form>
+    
     </div>
 
 </div>

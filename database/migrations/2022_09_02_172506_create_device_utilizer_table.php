@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('device_utilizer', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('device_id')->references('id')->on('devices');
-            $table->foreignId('utilizer_id')->references('id')->on('utilizers');
+            $table->foreignId('device_id')->references('id')->on('devices')->constrained()->cascadeOnDelete();
+            $table->foreignId('utilizer_id')->references('id')->on('utilizers')->constrained()->cascadeOnDelete();
 
         });
     }

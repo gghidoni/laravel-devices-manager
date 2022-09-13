@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->datetime('date');
             $table->string('description');
-            $table->foreignId('device_id');
-            $table->foreignId('user_id');
+            $table->foreignId('device_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->boolean('is_update');
             $table->timestamps();
         });

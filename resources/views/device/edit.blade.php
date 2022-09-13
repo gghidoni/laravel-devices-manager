@@ -2,11 +2,13 @@
 
 @section('content')
 
-<div class="form">
-    <h1>Edit Dispositivo</h1>
+<div class="section-box">
+    <div class="new-item">
+        <h3>Modifica dispositivo</h3>
 
     <form action="/devices/{{$device->serial}}/update" method="POST">
         @csrf
+        @method('PATCH')
 
         <input type="text" name="serial" value="{{$device->serial}}" required><br><br>
         @error('serial')
@@ -55,7 +57,7 @@
             }
         @endphp
         @foreach ($utilizers as $utilizer)
-            <input type="checkbox" name="utilizer_id[]" id="{{$utilizer->id}}" value="{{$utilizer->id}}" {{ in_array($utilizer->id, $utilizersDevice) ? 'checked' : '' }}><label for="{{$utilizer->id}}">{{ ucwords($utilizer->name) }}</label>
+            <input type="checkbox" name="utilizer_id[]" id="{{$utilizer->id}}" value="{{$utilizer->id}}" {{ in_array($utilizer->id, $utilizersDevice) ? 'checked' : '' }}><label class="check" for="{{$utilizer->id}}">{{ ucwords($utilizer->name) }}</label>
         @endforeach
         <br><br>
         @error('utilizer_id')
@@ -71,6 +73,9 @@
         <input type="submit" value="Update">
 
     </form>
+
+    </div>
+    
 
 </div>
 

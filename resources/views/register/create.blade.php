@@ -3,9 +3,9 @@
 
 @section('content')
 
-    <div class="form">
-        <h1>Nuovo manutentore</h1>
-
+<div class="section-box">
+    <div class="new-item">
+        <h3>Registra un nuovo manutentore</h3>
         <form action="/register" method="POST">
 
             @csrf
@@ -30,6 +30,8 @@
 
         </form>
     </div>
+</div>
+
 
     
 @endsection

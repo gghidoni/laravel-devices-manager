@@ -17,7 +17,9 @@ class UtilizerController extends Controller
             abort(Response::HTTP_FORBIDDEN);
         }
 
-        return view('utilizer.create');
+        return view('utilizer.create', [
+            'utilizers' => Utilizer::latest()->get()
+        ]);
 
     }
 
@@ -32,6 +34,14 @@ class UtilizerController extends Controller
 
         // redirect con messaggio
         return back()->with('success', 'Utilizzatore registrato con successo!');
+
+    }
+
+
+    public function destroy(Utilizer $utilizer) {
+
+            $utilizer->delete();
+            return redirect('/utilizer/create')->with('success', 'Utilizzatore eliminato!');
 
     }
 

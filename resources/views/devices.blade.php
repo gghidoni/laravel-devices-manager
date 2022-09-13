@@ -37,10 +37,22 @@
                     <a href="/departments/{{$device->department->name}}">{{$device->department->name}}</a>
                 </div>
             </div>
-            <a href="/" class="service-btn">
-                <img src="/icons/service.svg" alt="">
-                <span>Manutenzione</span>
-            </a>
+            <div class="service-btn">
+                <a href="/devices/{{$device->serial}}/edit" class="">
+                    <img src="/icons/edit.svg" alt="">
+                </a>
+                <form action="/devices/{{$device->serial}}/destroy" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button class="device-btn" onclick="return confirm('Sei sicuro di voler eliminare questo dispositivo?')">
+                        <img src="/icons/delete.svg" alt="delete">
+                    </button>
+                </form>
+                <a href="/devices/{{$device->serial}}" class="">
+                    <img src="/icons/open.svg" alt="">
+                </a>
+            </div>
+            
         </div>
 
     @endforeach

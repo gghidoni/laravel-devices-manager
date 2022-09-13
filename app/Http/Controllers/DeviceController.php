@@ -15,14 +15,16 @@ class DeviceController extends Controller
     
     public function index() {
 
-        // risultati filtrati per una ricerca
-        //$devices = Device::latest()->filter(request(['search', 'es_tipologia']))->get(),
-        // visualizza tutti i post
+        // visualizza tutti i device
         
-        $devices = Device::orderByRaw('ISNULL(lastUpdate), lastUpdate ASC')->get();
+        $devices = Device::orderByRaw('ISNULL(lastUpdate), lastUpdate ASC');
+
+        if(request('search')) {
+            $devices->where('serial', 'like', '%' . request('search') . '%');
+        }
     
         return view('devices', [
-            'devices' => $devices
+            'devices' => $devices->get()
         ]);
     
     }
@@ -51,7 +53,7 @@ class DeviceController extends Controller
         //validazione device
         $attributes = request()->validate([
             'serial' => ['required', ValidationRule::unique('devices', 'serial')],
-            'description' => ['required', ValidationRule::unique('devices', 'description')],
+            'description' => ['required', 'max:255', ValidationRule::unique('devices', 'description')],
             'typology_id' => ['required', ValidationRule::exists('typologies', 'id')],
             'department_id' => ['required', ValidationRule::exists('departments', 'id')],
             'lastUpdate' => 'nullable|date'
@@ -62,16 +64,19 @@ class DeviceController extends Controller
 
         // validazioni id utilizzatori inseriti
         $utilizers = request()->validate([
-            'utilizer_id' => ['required', ValidationRule::exists('utilizers', 'id')]
+            'utilizer_id' => ['nullable', ValidationRule::exists('utilizers', 'id')]
         ]);
 
         // inserimento utilizzatori device appena creato
-        foreach($utilizers['utilizer_id'] as $utilizer) {
-            DB::table('device_utilizer')->insert([
-                'device_id' => $device->id,
-                'utilizer_id' => $utilizer
-            ]);
+        if(isset($utilizers['utilizer_id'])){
+            foreach($utilizers['utilizer_id'] as $utilizer) {
+                DB::table('device_utilizer')->insert([
+                    'device_id' => $device->id,
+                    'utilizer_id' => $utilizer
+                ]);
+            }
         }
+        
 
         // redirect con messaggio
         return back()->with('success', 'Dispositivo registrato con successo!');
@@ -124,11 +129,15 @@ class DeviceController extends Controller
             'lastUpdate' => 'nullable|date'
         ]);
 
+        if(!isset($attributes['lastUpdate'])){
+            $attributes['lastUpdate'] = $device->lastUpdate;
+        }
+
         $device->update($attributes);
 
         // validazione utilizer id
         $utilizers = request()->validate([
-            'utilizer_id' => ['required', ValidationRule::exists('utilizers', 'id')]
+            'utilizer_id' => ['nullable', ValidationRule::exists('utilizers', 'id')]
         ]);
 
         // verifica update utilizers
@@ -139,19 +148,39 @@ class DeviceController extends Controller
         }
 
         // itero i nuovi valori request utilizer, se non sono gia presenti creo un nuovo record nella tabella
-        foreach($utilizers['utilizer_id'] as $utilizer) {
-            if(!in_array($utilizer, $oldUtilizers)){
-                DB::table('device_utilizer')->insert([
-                    'device_id' => $device->id,
-                    'utilizer_id' => $utilizer
-                ]);
+        if(isset($utilizers['utilizer_id'])){
+            foreach($utilizers['utilizer_id'] as $utilizer) {
+                if(!in_array($utilizer, $oldUtilizers)){
+                    DB::table('device_utilizer')->insert([
+                        'device_id' => $device->id,
+                        'utilizer_id' => $utilizer
+                    ]);
+                }
             }
+        } else {
+            DB::table('device_utilizer')->where('device_id', $device->id)->delete();
         }
+        
 
         // redirect con messaggio
         return redirect('/devices' . '/' . $device->serial )->with('success', 'Dispositivo aggiornato con successo.');
 
+    }
 
+
+    public function destroy(Device $device) {
+        
+
+        // elimina
+        $device->delete();
+
+        //elimina corrispondenze nella tabella device_utilizer
+        //DB::table('device_utilizer')->where('device_id', $device->id)->delete();
+
+        // redirect con messaggio
+        return redirect('/')->with('success', 'Dispositivo eliminato!');
 
     }
+
+
 }

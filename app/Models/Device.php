@@ -44,7 +44,7 @@ class Device extends Model
 
     public function services() {
 
-        return $this->hasMany(Service::class);
+        return $this->hasMany(Service::class)->latest();
 
     }
 

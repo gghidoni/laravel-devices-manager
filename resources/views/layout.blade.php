@@ -28,6 +28,10 @@
                         @endauth
                     </div>
                     <div class="right">
+                        <form action="#" method="get">
+                            <input class="search" type="text" name="search" placeholder="Cerca seriale">
+                            <button><img src="/icons/search.svg" alt=""></button>
+                        </form>
                         @auth
                             @if ((auth()->user()->is_admin) != 0)
                                 <div class="menu-button">
@@ -73,6 +77,11 @@
             @if (session()->has('success'))
                 <div>
                     <p style="color: green"><strong>{{session('success')}}</strong></p>
+                </div>
+            @endif
+            @if (session()->has('message'))
+                <div>
+                    <p style="color: red"><strong>{{session('message')}}</strong></p>
                 </div>
             @endif
         </div>

@@ -2,8 +2,9 @@
 
 @section('content')
 
-    <div class="form">
-        <h1>Nuovo Dispositivo</h1>
+<div class="section-box">
+    <div class="new-item">
+        <h3>Registra un nuovo dispositivo</h3>
 
         <form action="/device/create" method="POST">
             @csrf
@@ -54,7 +55,7 @@
                     $utilizers = \App\Models\Utilizer::all();
                 @endphp
                 @foreach ($utilizers as $utilizer)
-                    <input type="checkbox" name="utilizer_id[]" id="{{$utilizer->id}}" value="{{$utilizer->id}}"><label for="{{$utilizer->id}}">{{ ucwords($utilizer->name) }}</label>
+                    <input  type="checkbox" name="utilizer_id[]" id="{{$utilizer->id}}" value="{{$utilizer->id}}"><label class="check" for="{{$utilizer->id}}">{{ ucwords($utilizer->name) }}</label>
                 @endforeach
                 <br><br>
             @error('utilizer_id')
@@ -69,13 +70,12 @@
             @enderror
 
 
-            <input type="submit" value="Pubblica">
+            <input type="submit" value="Registra">
 
 
         </form>
     </div>
+</div>
 
     
-
-
 @endsection
